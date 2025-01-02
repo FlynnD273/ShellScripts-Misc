@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 mkdir -p ~/.local/bin
 
 find $PWD -name "*.sh" -type f -not -name "link-all-scripts.sh" | while read -r file; do

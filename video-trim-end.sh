@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 if [ -z "$1" ]; then
     echo "Usage: $0 input_video.mp4 <seconds to trim>"
     exit 1
