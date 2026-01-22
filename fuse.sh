@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+output="$2"
+if [ ! "$output" ]; then
+	output=$(uuidgen)
+fi
 file="${1%_[0-9].jpg}"
-align_image_stack "$file"* -o "$2"
-ffmpeg -i "$2.hdr" "$2.tiff" -y && rm "$2.hdr"
+align_image_stack "$file"* -o "$output"
+ffmpeg -i "$output.hdr" "$output.tiff" -y && rm "$output.hdr"
