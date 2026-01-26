@@ -15,4 +15,4 @@ for f in "$file"_[0-9]*.jpg; do
 done
 
 align_image_stack "$file"_[0-9]*.jpg -o "$output"
-ffmpeg -i "$output.hdr" "$output.tiff" -y && rm "$output.hdr"
+ffmpeg -i "$output.hdr" -compression_algo 32946 "$output.tiff" -y && rm "$output.hdr"
