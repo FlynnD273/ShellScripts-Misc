@@ -2,6 +2,10 @@
 
 folder=~/Pictures/Camera/
 
+if [ ! -d ~/Downloads/a ]; then
+	mkdir ~/Downloads/a 
+fi
+
 for file in "$folder/"IMG_*_*_[0-9].jpg; do
 	if [ ! -f "$file" ]; then
 		continue
@@ -11,4 +15,5 @@ for file in "$folder/"IMG_*_*_[0-9].jpg; do
 	fuse "$file" "$output"
 	gio trash "${file%_[0-9].jpg}"_[0-9].jpg
 	touch -d "$d" "$output.tiff"
+	cp "$output.tiff" ~/Documents/a
 done
