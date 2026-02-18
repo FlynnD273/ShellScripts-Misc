@@ -25,6 +25,7 @@
 # This script can be found on codeberg.org:
 # https://codeberg.org/wolkensteine/Polyfjord-COLMAP-Workflow
 shopt -s nullglob
+THREADS_TO_USE="$(getconf _NPROCESSORS_ONLN)"
 
 if ! command -v ffmpeg >/dev/null 2>&1
 then
@@ -90,9 +91,10 @@ process_video_file () {
   echo "[4/4] Mapping ..."
 
   colmap mapper \
-        --database_path "$SCENES_DIR/$2/database.db" \
-        --image_path "$IMG_DIR" \
-        --output_path "$SPARSE_DIR"
+   --database_path "$SCENES_DIR/$2/database.db" \
+   --image_path    "$IMG_DIR" \
+   --output_path   "$SPARSE_DIR" \
+   --Mapper.num_threads "$THREADS_TO_USE"
 
   echo "Done. Exporting best model."
 

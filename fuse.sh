@@ -17,3 +17,4 @@ done
 
 align_image_stack "$file"_[0-9]*.tiff -o "$output"
 ffmpeg -i "$output.hdr" -compression_algo 32946 "$output.tiff" -y && rm "$output.hdr"
+gio trash "$file"_[0-9]*.tiff -o "$output"
