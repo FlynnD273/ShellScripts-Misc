@@ -17,5 +17,4 @@ for file in "$folder/"IMG_*_*_[0-9].dng; do
 	gio trash "${file%_[0-9].dng}"_[0-9].dng
 	touch -d "$d" "$output.tiff"
 	cp "$output.tiff" ~/Downloads/a
-	exit
 done
