@@ -13,6 +13,11 @@ for file in "$folder/"IMG_*_*_[0-9].dng; do
 	d=$(date -R -r "$file")
 	output="${file%_[0-9].dng}_hdr"
 	fuse "$file" "$output"
+	filesize=$(stat -c%s "$output")
+	while [ "$filesize" -eq 0 ]; do
+		fuse "$file" "$output"
+		filesize=$(stat -c%s "$output")
+	done
 	gio trash "${file%_[0-9].dng}"_[0-9].jpg
 	gio trash "${file%_[0-9].dng}"_[0-9].dng
 	touch -d "$d" "$output.tiff"
