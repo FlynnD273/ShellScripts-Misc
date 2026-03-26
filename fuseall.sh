@@ -13,8 +13,8 @@ for file in "$folder/"IMG_*_*_[0-9].dng; do
 	d=$(date -R -r "$file")
 	output="${file%_[0-9].dng}_hdr"
 	fuse "$file" "$output"
-	filesize=$(stat -c%s "$output")
-	while [ "$filesize" -eq 0 ]; do
+	filesize=$(stat -c%s "$output.tiff")
+	while [ "$filesize.tiff" -eq 0 ]; do
 		fuse "$file" "$output"
 		filesize=$(stat -c%s "$output")
 	done
