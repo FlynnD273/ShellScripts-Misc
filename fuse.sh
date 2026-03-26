@@ -11,11 +11,11 @@ file="${1%_[0-9].*}"
 
 for f in "$file"_[0-9]*.$ext; do
 	t=$(mktemp --suffix .tiff)
-	ffmpeg -i "$f" "$t" -y
+	magick "$f" "$t"
 	exiftool -overwrite_Original -TagsFromFile "$f" -All:All "$t"
 	mv "$t" "${f%.*}.tiff" -f
 done
 
-align_image_stack "$file"_[0-9]*.tiff -o "$output"
+align_image_stack "$file"_[0-9]*.tiff -o "$output" 2>/dev/null
 ffmpeg -i "$output.hdr" -compression_algo 32946 "$output.tiff" -y && rm "$output.hdr"
 rm "$file"_[0-9]*.tiff

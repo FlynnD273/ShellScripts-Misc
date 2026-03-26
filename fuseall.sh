@@ -14,12 +14,13 @@ for file in "$folder/"IMG_*_*_[0-9].dng; do
 	output="${file%_[0-9].dng}_hdr"
 	fuse "$file" "$output"
 	filesize=$(stat -c%s "$output.tiff")
-	while [ "$filesize.tiff" -eq 0 ]; do
+	while [ "$filesize" -eq 0 ]; do
+		echo "Conversion for ${file%_[0-9].dng} failed. Retrying..."
 		fuse "$file" "$output"
 		filesize=$(stat -c%s "$output")
 	done
 	gio trash "${file%_[0-9].dng}"_[0-9].jpg
 	gio trash "${file%_[0-9].dng}"_[0-9].dng
 	touch -d "$d" "$output.tiff"
-	cp "$output.tiff" ~/Downloads/a
+	cp "$output.tiff" ~/Downloads/a -f
 done
