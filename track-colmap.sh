@@ -44,7 +44,7 @@ SCENES_DIR=SCENES
 
 if [ ! -d "$VIDEOS_DIR" ]; then
   echo "The directory $VIDEOS_DIR does not exist."
-  exit 1
+	mkdir $VIDEOS_DIR
 fi
 if [ ! -d "$SCENES_DIR" ]; then
   echo "The directory $SCENES_DIR does not exist."
@@ -68,29 +68,30 @@ process_video_file () {
   if [ -t "$SCENES_DIR/$2/sparse/*" ]; then
     echo "↻ Skipping $1 – it looks to be already reconstructed."
     return
-	else
+	elif [ ! -t "$IMG_DIR/*" ]; then
 		ffmpeg -stats -i "$1" -qscale:v 2 "$IMG_DIR/frame_%06d.jpg"
   fi
 
 
   echo "[2/4] Extracting features ..."
 
-  colmap feature_extractor \
+  xvfb-run -a colmap feature_extractor \
     --database_path "$SCENES_DIR/$2/database.db" \
     --image_path    "$IMG_DIR" \
     --ImageReader.single_camera 1 \
-    --SiftExtraction.use_gpu 1 \
-    --SiftExtraction.max_image_size 4096
+
+    # --SiftExtraction.use_gpu 1 \
+    # --SiftExtraction.max_image_size 4096
 
   echo "[3/4] Matching features ..."
 
-  colmap sequential_matcher \
+  xvfb-run -a colmap sequential_matcher \
     --database_path "$SCENES_DIR/$2/database.db" \
     --SequentialMatching.overlap 15
 
   echo "[4/4] Mapping ..."
 
-  colmap mapper \
+  xvfb-run -a colmap mapper \
    --database_path "$SCENES_DIR/$2/database.db" \
    --image_path    "$IMG_DIR" \
    --output_path   "$SPARSE_DIR" \
@@ -98,7 +99,7 @@ process_video_file () {
 
   echo "Done. Exporting best model."
 
-  colmap model_converter \
+  xvfb-run -a colmap model_converter \
     --input_path  "$SPARSE_DIR/0" \
     --output_path "$SPARSE_DIR" \
     --output_type TXT 
