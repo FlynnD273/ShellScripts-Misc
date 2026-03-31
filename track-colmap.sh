@@ -27,18 +27,6 @@
 shopt -s nullglob
 THREADS_TO_USE="$(getconf _NPROCESSORS_ONLN)"
 
-if ! command -v ffmpeg >/dev/null 2>&1
-then
-    echo "ffmpeg could not be found. Please check that it is installed and within your PATH."
-    exit 1
-fi
-
-if ! command -v colmap >/dev/null 2>&1
-then
-    echo "colmap could not be found. Please check that it is installed and within your PATH."
-    exit 1
-fi
-
 VIDEOS_DIR=VIDEOS
 SCENES_DIR=SCENES
 
@@ -64,11 +52,13 @@ process_video_file () {
 
   echo "[1/4] Extracting frames."
 
+	sparse=( "$SCENES_DIR/$2/sparse"/* )
+	frames=( "$IMG_DIR"/* )
 
-  if [ -t "$SCENES_DIR/$2/sparse/*" ]; then
+  if [[ ${#sparse[@]} != 0 ]]; then
     echo "↻ Skipping $1 – it looks to be already reconstructed."
     return
-	elif [ ! -t "$IMG_DIR/*" ]; then
+	elif [[ ${#frames[@]} == 0 ]]; then
 		ffmpeg -stats -i "$1" -qscale:v 2 "$IMG_DIR/frame_%06d.jpg"
   fi
 
