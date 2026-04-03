@@ -9,7 +9,7 @@ if [ ! "$output" ]; then
 fi
 file="${1%_[0-9].*}"
 
-for f in "$file"_[0-9]*.$ext; do
+for f in "$file"_[0-9]*."$ext"; do
 	t=$(mktemp --suffix .tiff)
 	magick "$f" "$t"
 	exiftool -overwrite_Original -TagsFromFile "$f" -All:All "$t"

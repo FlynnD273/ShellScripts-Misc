@@ -26,6 +26,7 @@
 # https://codeberg.org/wolkensteine/Polyfjord-COLMAP-Workflow
 shopt -s nullglob
 THREADS_TO_USE="$(getconf _NPROCESSORS_ONLN)"
+VF=$1
 
 VIDEOS_DIR=VIDEOS
 SCENES_DIR=SCENES
@@ -59,7 +60,7 @@ process_video_file () {
     echo "↻ Skipping $1 – it looks to be already reconstructed."
     return
 	elif [[ ${#frames[@]} == 0 ]]; then
-		ffmpeg -stats -i "$1" -qscale:v 2 "$IMG_DIR/frame_%06d.jpg"
+		ffmpeg -i "$1" $VF -qscale:v 2 "$IMG_DIR/frame_%06d.jpg"
   fi
 
 

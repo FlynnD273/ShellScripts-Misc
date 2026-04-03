@@ -12,12 +12,16 @@ for file in "$folder/"IMG_*_*_[0-9].dng; do
 	fi
 	d=$(date -R -r "$file")
 	output="${file%_[0-9].dng}_hdr"
+	if [[ -f  "$output.tiff" ]]; then
+		rm "$output.tiff"
+	fi
 	fuse "$file" "$output"
 	filesize=$(stat -c%s "$output.tiff")
-	while [ "$filesize" -eq 0 ]; do
+	while [[ "$filesize" -eq 0 ]]; do
 		echo "Conversion for ${file%_[0-9].dng} failed. Retrying..."
+		rm "$output.tiff"
 		fuse "$file" "$output"
-		filesize=$(stat -c%s "$output")
+		filesize=$(stat -c%s "$output.tiff")
 	done
 	gio trash "${file%_[0-9].dng}"_[0-9].jpg
 	gio trash "${file%_[0-9].dng}"_[0-9].dng
