@@ -10,12 +10,20 @@ fi
 file="${1%_[0-9].*}"
 
 for f in "$file"_[0-9]*."$ext"; do
+	if [[ -f "${f%.*}.tiff" ]]; then
+		continue
+	fi
 	t=$(mktemp --suffix .tiff)
 	magick "$f" "$t"
 	exiftool -overwrite_Original -TagsFromFile "$f" -All:All "$t"
 	mv "$t" "${f%.*}.tiff" -f
 done
 
-align_image_stack "$file"_[0-9]*.tiff -o "$output" 2>/dev/null
-ffmpeg -i "$output.hdr" -compression_algo 32946 "$output.tiff" -y && rm "$output.hdr"
-rm "$file"_[0-9]*.tiff
+tmp=$(mktemp --suffix=.hdr)
+align_image_stack "$file"_[0-9].tiff -o "$tmp" 2>/dev/null
+tmpout=$(mktemp --suffix=.tiff)
+magick "$tmp" "$tmpout"
+echo "done"
+mv "$tmpout" "$output.tiff"
+rm "$tmp"
+# rm "$file"_+([0-9]).tiff
